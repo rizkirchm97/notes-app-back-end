@@ -1,5 +1,5 @@
 const ClientError = require('../../exceptions/ClientError');
-const NotesService = require('../../services/inMemory/NotesService');
+const NotesService = require('../../services/postgres/NotesService');
 
 class NotesHandler {
   constructor(service, validator) {
