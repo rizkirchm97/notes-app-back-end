@@ -7,6 +7,7 @@ class UsersHandler {
 
     this.postUserHandler = this.postUserHandler.bind(this);
     this.getUserByIdHandler = this.getUserByIdHandler.bind(this);
+    this.getUserByUsernameHandler = this.getUserByUsernameHandler.bind(this);
   }
 
   async postUserHandler(req, h) {
@@ -76,6 +77,38 @@ class UsersHandler {
       res.code(500);
       console.error(err);
       return res;
+    }
+  }
+
+  async getUserByUsernameHandler(req, h) {
+    try {
+      const { username = '' } = req.query;
+      const users = await this._service.getUserByUsername(username);
+
+      return {
+        status: 'success',
+        message: 'User ID ditemukan',
+        data: {
+          users,
+        },
+      };
+    } catch (err) {
+      if (err instanceof ClientError) {
+        const response = h.response({
+          status: 'fail',
+          message: err.message,
+        });
+        response.code(err.statusCode);
+        return response;
+      }
+
+      const response = h.response({
+        status: 'error',
+        message: 'Maaf, terjadi kegagalan pada server kami.',
+      });
+      response.code(500);
+      console.error(err);
+      return response;
     }
   }
 }
